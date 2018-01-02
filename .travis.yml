@@ -1,0 +1,24 @@
+group: travis_lts
+sudo: required
+
+services:
+- docker
+
+env:
+  global:
+  - TERM=dumb
+  - DOCKER_USERNAME=daggerok
+  - secure: "Sb6Q5LP42j/Qwtm+8X2PEac3Y541KZbHMaMj9aJ9HLPF7vmMd4iQubs/L7I0ruMYIDWDcqtYp1LXHvvmKafvxd1WI1ZiGI1k2eYdrWo0AqG7W9HXGy58GaW4IkAjqZuLM5IeV7f4mtDnevSQGYcyEq0GpGb10A4fVsXRLH9ZjFhCO9NRIfXtcM1qZ6yqaKju34zrvRytSyxCe3tP246TbyzGDakQ6lcUC2K7QclUADIrJhrGHIvCfGrT2CmWrABSQQ6KTeSDAqtqRguj+IcY+MJLU9xzMOiUQMyQq8useK/bU3I/3J9BKF6WhtrNBEqtHnOlfCuWTTYxSIKkQBWMzbnapzlEBiNBz4dZV1fYaWLerCL1rzWuTJ5Kp1B4h/apm7RP2o9/sQgBYr9KFntvDF9Omru8NFIfCPGJ2Gze+iOOvxXranI3tPQfbKaRN6RcLotuGO6o3DP1wmBrvB/ZCHyVw3yKtK7WNwEnY2valRtarCT9zX3ZE94+EokqWT/O0lDns6tN6bFwK6NCS/tQ9whQGrJI3+TsNdu0SCowYozDS4ierrRdef9+zFlMik0sPE4yIXbGQQ0LBBp1g8n88NdGhCDXWGbmmPyiWN7c22B6IjQPrL55vxvxmaKaj12GzZAMT5K06MGiJgKBn37RLzJ3O++gLJIp0r55BPmmLCY="
+
+script:
+- docker build -t ${DOCKER_USERNAME}/apache-tomcat .
+- >
+  if [ "${TRAVIS_BRANCH}" == "master" ]; then
+    docker tag ${DOCKER_USERNAME}/apache-tomcat ${DOCKER_USERNAME}/apache-tomcat:latest
+    docker tag ${DOCKER_USERNAME}/apache-tomcat ${DOCKER_USERNAME}/apache-tomcat:alpine
+  else
+    docker tag ${DOCKER_USERNAME}/apache-tomcat ${DOCKER_USERNAME}/apache-tomcat:${TRAVIS_BRANCH}
+    docker tag ${DOCKER_USERNAME}/apache-tomcat ${DOCKER_USERNAME}/apache-tomcat:${TRAVIS_BRANCH}-alpine
+  fi
+- docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+- docker push ${DOCKER_USERNAME}/apache-tomcat
