@@ -21,16 +21,17 @@ ARG TOMCAT_URL_ARG="https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_RELEA
 
 ENV JAVA_VERSION="7"
 ENV TOMCAT_USER=${TOMCAT_USER_ARG} \
+    TOMCAT_GROUP=${TOMCAT_USER_ARG}-group \
     TOMCAT_FILE=${TOMCAT_FILE_ARG} \
     TOMCAT_URL=${TOMCAT_URL_ARG}
 ENV TOMCAT_USER_HOME="/home/${TOMCAT_USER}"
 ENV TOMCAT_HOME="${TOMCAT_USER_HOME}/${TOMCAT_FILE}"
 
 RUN apk --no-cache --update add busybox-suid bash wget ca-certificates unzip sudo openssh-client shadow \
- && addgroup ${TOMCAT_USER}-group \
+ && addgroup ${TOMCAT_GROUP} \
  && echo "${TOMCAT_USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers \
  && sed -i "s/.*requiretty$/Defaults !requiretty/" /etc/sudoers \
- && adduser -h ${TOMCAT_USER_HOME} -s /bin/bash -D -u 1025 ${TOMCAT_USER} ${TOMCAT_USER}-group \
+ && adduser -h ${TOMCAT_USER_HOME} -s /bin/bash -D -u 1025 ${TOMCAT_USER} ${TOMCAT_GROUP} \
  && usermod -a -G wheel ${TOMCAT_USER} \
  && apk del busybox-suid shadow \
  && rm -rf /var/cache/apk/* /tmp/*
@@ -41,8 +42,8 @@ WORKDIR ${TOMCAT_USER_HOME}
 CMD /bin/bash
 EXPOSE 8080
 ENTRYPOINT /bin/bash ${TOMCAT_HOME}/bin/catalina.sh start \
-        && mkdir -p ${TOMCAT_HOME}/logs \
         && touch ${TOMCAT_HOME}/logs/catalina.out \
+        && chown -R ${TOMCAT_USER}:${TOMCAT_GROUP} ${TOMCAT_HOME}/logs/catalina.out \
         && tail -f ${TOMCAT_HOME}/logs/catalina.out
 
 RUN wget ${TOMCAT_URL} -O "${TOMCAT_USER_HOME}/${TOMCAT_FILE}.zip" \
