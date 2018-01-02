@@ -17,7 +17,7 @@ ARG TOMCAT_RELEASE=8
 ARG TOMCAT_VERSION=8.5.24
 ARG TOMCAT_USER_ARG="tomcat"
 ARG TOMCAT_FILE_ARG="apache-tomcat-${TOMCAT_VERSION}"
-ARG TOMCAT_URL_ARG="https://archive.apache.org/dist/tomcat/tomcat-${RELEASE}/v${TOMCAT_VERSION}/bin/${TOMCAT_FILE_ARG}.zip"
+ARG TOMCAT_URL_ARG="https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_RELEASE}/v${TOMCAT_VERSION}/bin/${TOMCAT_FILE_ARG}.zip"
 
 ENV JAVA_VERSION="7"
 ENV TOMCAT_USER=${TOMCAT_USER_ARG} \
