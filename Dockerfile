@@ -5,11 +5,11 @@
 #
 # # healthy check:
 # HEALTHCHECK --interval=1s --timeout=3s --retries=30 \
-# CMD wget -q --spider http://127.0.0.1:8080/plain-http-servlet/ \
-#  || exit 1
+#  CMD wget -q --spider http://127.0.0.1:8080/health/ \
+#   || exit 1
 #
 # # debug:
-# ARG JPDA_OPTS_ARG=" ${JAVA_OPTS} -agentlib:jdwp=transport=dt_socket, address=1043, server=y, suspend=n "
+# ARG JPDA_OPTS_ARG="${JAVA_OPTS} -agentlib:jdwp=transport=dt_socket,address=1043,server=y,suspend=n"
 # ENV JPDA_OPTS="${JPDA_OPTS_ARG}"
 # EXPOSE 5005
 #
@@ -50,8 +50,8 @@ WORKDIR ${TOMCAT_USER_HOME}
 CMD /bin/bash
 EXPOSE 8080
 ENTRYPOINT /bin/bash ${TOMCAT_HOME}/bin/catalina.sh start \
-        && touch ${TOMCAT_HOME}/logs/catalina.out \
-        && chown -R ${TOMCAT_USER}:${TOMCAT_GROUP} ${TOMCAT_HOME}/logs/catalina.out \
+        && mkdir -p ${TOMCAT_HOME}/logs && touch ${TOMCAT_HOME}/logs/catalina.out \
+        && chown -R ${TOMCAT_USER}:${TOMCAT_USER} ${TOMCAT_HOME}/logs \
         && tail -f ${TOMCAT_HOME}/logs/catalina.out
 
 RUN wget ${TOMCAT_URL} -O "${TOMCAT_USER_HOME}/${TOMCAT_FILE}.zip" \
