@@ -3,13 +3,14 @@ Apache Tomcat docker image automation build
 
 ## Tags
 
+- 9.0.6 (based on openjdk:8u151-jdk-alpine image with JCE installed)
 - 9.0.2 (based on openjdk:8u151-jdk-alpine image with JCE installed)
 - 8.5.29 (based on openjdk:8u151-jdk-alpine image with JCE installed)
 - 8.5.24 (based on openjdk:8u151-jdk-alpine image with JCE installed)
 
 **Exposed ports**:
 
-- 8080 - deployed apps
+- 8080 - deployed web apps
 
 ## Usage:
 
@@ -19,7 +20,7 @@ Assuming you have `/health` in your `app`:
 
 ```
 
-FROM daggerok/apache-tomcat:9.0.2
+FROM daggerok/apache-tomcat:9.0.6
 HEALTHCHECK --interval=2s --retries=22 \
         CMD wget -q --spider http://127.0.0.1:8080/app/health/ || exit 1
 ADD ./build/libs/*.war ${TOMCAT_HOME}/webapps/app.war
@@ -44,5 +45,13 @@ COPY ./target/*.war ${TOMCAT_HOME}/webapps/
 
 FROM daggerok/apache-tomcat:8.5.29-alpine
 COPY ./path/to/some/*.war ./path/to/another/*.war ${TOMCAT_HOME}/webapps/
+
+```
+
+### Shell command
+
+```
+
+docker run --rm --name tomcat -d -p 8080:8080 daggerok/tomcat:8.5.24
 
 ```
