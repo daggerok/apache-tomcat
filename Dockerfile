@@ -1,7 +1,7 @@
 ##### USAGE BEGIN #####
 #
 # # apply base image:
-# FROM daggerok/apache-tomcat:8.5.24
+# FROM daggerok/apache-tomcat:8.5.29
 #
 # # healthy check:
 # HEALTHCHECK --interval=2s --retries=22 \
@@ -21,7 +21,7 @@ FROM openjdk:8u151-jdk-alpine
 MAINTAINER Maksim Kostromin https://github.com/daggerok/docker
 
 ARG TOMCAT_RELEASE=8
-ARG TOMCAT_VERSION=8.5.24
+ARG TOMCAT_VERSION=8.5.29
 ARG TOMCAT_USER_ARG="tomcat"
 ARG TOMCAT_FILE_ARG="apache-tomcat-${TOMCAT_VERSION}"
 ARG TOMCAT_URL_ARG="https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_RELEASE}/v${TOMCAT_VERSION}/bin/${TOMCAT_FILE_ARG}.zip"

@@ -3,8 +3,9 @@ Apache Tomcat docker image automation build
 
 ## Tags
 
-- 9.0.2 (based on openjdk:8u151-jdk-alpine image + JCE installed)
-- 8.5.24 (based on openjdk:8u151-jdk-alpine image + JCE installed)
+- 9.0.2 (based on openjdk:8u151-jdk-alpine image with JCE installed)
+- 8.5.29 (based on openjdk:8u151-jdk-alpine image with JCE installed)
+- 8.5.24 (based on openjdk:8u151-jdk-alpine image with JCE installed)
 
 **Exposed ports**:
 
@@ -41,7 +42,7 @@ COPY ./target/*.war ${TOMCAT_HOME}/webapps/
 
 ```
 
-FROM daggerok/apache-tomcat:8.5.24-alpine
+FROM daggerok/apache-tomcat:8.5.29-alpine
 COPY ./path/to/some/*.war ./path/to/another/*.war ${TOMCAT_HOME}/webapps/
 
 ```
