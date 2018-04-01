@@ -62,7 +62,5 @@ ENTRYPOINT /bin/bash ${TOMCAT_HOME}/bin/catalina.sh start \
 RUN wget ${TOMCAT_URL} -O "${TOMCAT_USER_HOME}/${TOMCAT_FILE}.zip" \
  && unzip "${TOMCAT_USER_HOME}/${TOMCAT_FILE}.zip" -d ${TOMCAT_USER_HOME} \
  && rm -rf "${TOMCAT_USER_HOME}/${TOMCAT_FILE}.zip" \
- && /bin/bash ${TOMCAT_HOME}/bin/catalina.sh start \
  && mkdir -p ${TOMCAT_HOME}/logs && touch ${TOMCAT_HOME}/logs/catalina.out \
- && chown -R ${TOMCAT_USER}:${TOMCAT_USER} ${TOMCAT_HOME}/logs \
- && /bin/bash ${TOMCAT_HOME}/bin/catalina.sh stop
+ && chown -R ${TOMCAT_USER}:${TOMCAT_USER} ${TOMCAT_HOME}/logs
