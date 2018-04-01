@@ -4,9 +4,8 @@
 # FROM daggerok/apache-tomcat:8.5.24
 #
 # # healthy check:
-# HEALTHCHECK --interval=1s --timeout=3s --retries=30 \
-#  CMD wget -q --spider http://127.0.0.1:8080/health/ \
-#   || exit 1
+# HEALTHCHECK --interval=2s --retries=22 \
+#  CMD wget -q --spider http://127.0.0.1:8080/health/ || exit 1
 #
 # # debug:
 # ARG JPDA_OPTS_ARG="${JAVA_OPTS} -agentlib:jdwp=transport=dt_socket,address=1043,server=y,suspend=n"
@@ -41,7 +40,15 @@ RUN apk --no-cache --update add busybox-suid bash wget ca-certificates unzip sud
  && sed -i "s/.*requiretty$/Defaults !requiretty/" /etc/sudoers \
  && adduser -h ${TOMCAT_USER_HOME} -s /bin/bash -D -u 1025 ${TOMCAT_USER} ${TOMCAT_GROUP} \
  && usermod -a -G wheel ${TOMCAT_USER} \
- && apk del busybox-suid shadow \
+ && wget --no-cookies \
+         --no-check-certificate \
+         --header "Cookie: oraclelicense=accept-securebackup-cookie" \
+                  "http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip" \
+         -O /tmp/jce_policy-8.zip \
+ && unzip -o /tmp/jce_policy-8.zip -d /tmp \
+ && mv -f ${JAVA_HOME}/lib/security ${JAVA_HOME}/lib/backup-security || true \
+ && mv -f /tmp/UnlimitedJCEPolicyJDK8 ${JAVA_HOME}/lib/security \
+ && apk --no-cache --no-network --purge del busybox-suid ca-certificates unzip shadow \
  && rm -rf /var/cache/apk/* /tmp/*
 
 USER ${TOMCAT_USER}
@@ -50,10 +57,10 @@ WORKDIR ${TOMCAT_USER_HOME}
 CMD /bin/bash
 EXPOSE 8080
 ENTRYPOINT /bin/bash ${TOMCAT_HOME}/bin/catalina.sh start \
-        && mkdir -p ${TOMCAT_HOME}/logs && touch ${TOMCAT_HOME}/logs/catalina.out \
-        && chown -R ${TOMCAT_USER}:${TOMCAT_USER} ${TOMCAT_HOME}/logs \
         && tail -f ${TOMCAT_HOME}/logs/catalina.out
 
 RUN wget ${TOMCAT_URL} -O "${TOMCAT_USER_HOME}/${TOMCAT_FILE}.zip" \
  && unzip "${TOMCAT_USER_HOME}/${TOMCAT_FILE}.zip" -d ${TOMCAT_USER_HOME} \
- && rm -rf "${TOMCAT_USER_HOME}/${TOMCAT_FILE}.zip"
+ && rm -rf "${TOMCAT_USER_HOME}/${TOMCAT_FILE}.zip" \
+ && mkdir -p ${TOMCAT_HOME}/logs && touch ${TOMCAT_HOME}/logs/catalina.out \
+ && chown -R ${TOMCAT_USER}:${TOMCAT_USER} ${TOMCAT_HOME}/logs
