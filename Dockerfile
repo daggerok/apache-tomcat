@@ -36,7 +36,7 @@ ENV TOMCAT_HOME="${TOMCAT_USER_HOME}/${TOMCAT_FILE}"
 
 EXPOSE 8080
 ENTRYPOINT ["/bin/ash", "-c"]
-CMD ["\
+CMD ["                                        \
   ash ${TOMCAT_HOME}/bin/catalina.sh start && \
   tail -f ${TOMCAT_HOME}/logs/catalina.out    \
 "]
