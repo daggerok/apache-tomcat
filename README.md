@@ -6,6 +6,7 @@ Apache Tomcat docker image automation build
 - [latest](https://github.com/daggerok/apache-tomcat/blob/master/Dockerfile) (based on [openjdk:8u151-jdk-alpine](https://hub.docker.com/_/openjdk/) image with JCE installed)
 - [9.0.6](https://github.com/daggerok/apache-tomcat/blob/9.0.6/Dockerfile) (based on [openjdk:8u151-jdk-alpine](https://hub.docker.com/_/openjdk/) image with JCE installed)
 - [9.0.2](https://github.com/daggerok/apache-tomcat/blob/9.0.2/Dockerfile) (based on [openjdk:8u151-jdk-alpine](https://hub.docker.com/_/openjdk/) image with JCE installed)
+- [8.5.57](https://github.com/daggerok/apache-tomcat/blob/8.5.57/Dockerfile) (based on [openjdk:8u151-jdk-alpine](https://hub.docker.com/_/openjdk/) image with JCE installed)
 - [8.5.29](https://github.com/daggerok/apache-tomcat/blob/8.5.29/Dockerfile) (based on [openjdk:8u151-jdk-alpine](https://hub.docker.com/_/openjdk/) image with JCE installed)
 - [8.5.24](https://github.com/daggerok/apache-tomcat/blob/8.5.24/Dockerfile) (based on [openjdk:8u151-jdk-alpine](https://hub.docker.com/_/openjdk/) image with JCE installed)
 
@@ -44,7 +45,7 @@ COPY ./target/*.war ${TOMCAT_HOME}/webapps/
 
 ```
 
-FROM daggerok/apache-tomcat:8.5.29-alpine
+FROM daggerok/apache-tomcat:8.5.57-alpine
 COPY ./path/to/some/*.war ./path/to/another/*.war ${TOMCAT_HOME}/webapps/
 
 ```
