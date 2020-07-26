@@ -16,6 +16,22 @@ Apache Tomcat docker image automation build
 
 ## Usage:
 
+create _Dockerfile_ with next content:
+
+```
+
+FROM daggerok/apache-tomcat:8.5.57
+ADD ./target/*.war ${TOMCAT_HOME}/webapps/
+
+```
+
+build and run application in Docker:
+
+```bash
+docker build -t daggerok/my-site .
+docker run --name=my-site --rm -it -p 8080:8080 daggerok/my-site
+```
+
 ### Health-check
 
 Assuming you have `/health` in your `app`:
