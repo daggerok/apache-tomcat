@@ -13,7 +13,7 @@
 # EXPOSE 5005
 #
 # # deploy apps:
-# COPY ./path/to/*.war ./path/to/another/*.war ${TOMCAT_HOME}/webapps/
+# COPY --chwon=tomcat ./path/to/*.war ./path/to/another/*.war ${TOMCAT_HOME}/webapps/
 #
 ##### USAGE END #####
 

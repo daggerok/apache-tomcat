@@ -1,7 +1,52 @@
+### IntelliJ IDEA ###
 .idea
+!.idea/
+.idea/*
+!.idea/codeStyle/
+!.idea/runConfigurations/
+*/.idea
+!*/.idea/
+*/.idea/*
+!*/.idea/runConfigurations/
+!*/.idea/codeStyle/
+*.iws
 *.iml
 *.ipr
-*.iws
 *.log*
-.DS_Store
-Thumbs.db
+.gradle/
+target/
+build/
+/out/
+**/out/**
+
+apache-tomcat-8.5.57*
+
+### Node JS ###
+node_modules/
+.cache/
+dist/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+### VS Code ###
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

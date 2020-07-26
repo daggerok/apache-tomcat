@@ -21,7 +21,7 @@ create _Dockerfile_ with next content:
 ```
 
 FROM daggerok/apache-tomcat:8.5.57
-ADD ./target/*.war ${TOMCAT_HOME}/webapps/
+COPY --chwon=tomcat ./target/*.war ${TOMCAT_HOME}/webapps/
 
 ```
 
