@@ -21,6 +21,7 @@ create _Dockerfile_ with next content:
 ```
 
 FROM daggerok/apache-tomcat:8.5.57
+RUN rm -rf ${TOMCAT_HOME}/webapps/ROOT*
 COPY --chown=tomcat ./target/*.war ${TOMCAT_HOME}/webapps/ROOT.war
 
 ```
@@ -30,6 +31,12 @@ build and run application in Docker:
 ```bash
 docker build -t daggerok/my-site .
 docker run --name=my-site --rm -it -p 8080:8080 daggerok/my-site
+```
+
+test if it's works and hosted on root context path:
+
+```bash
+curl 0:8080/
 ```
 
 ### Health-check
