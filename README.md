@@ -30,13 +30,19 @@ build and run application in Docker:
 
 ```bash
 docker build -t daggerok/my-site .
-docker run --name=my-site --rm -it -p 8080:8080 daggerok/my-site
+docker run --name my-site --rm -it -p 8080:8080 daggerok/my-site
 ```
 
 test if it's works and hosted from root context path:
 
 ```bash
 curl 0:8080/
+```
+
+cleanup
+
+```bash
+docker stop my-site
 ```
 
 ### Health-check
