@@ -39,7 +39,7 @@ test if it's works and hosted from root context path:
 curl 0:8080/
 ```
 
-cleanup
+cleanup:
 
 ```bash
 docker stop my-site
