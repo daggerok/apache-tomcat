@@ -33,7 +33,7 @@ docker build -t daggerok/my-site .
 docker run --name=my-site --rm -it -p 8080:8080 daggerok/my-site
 ```
 
-test if it's works and hosted on root context path:
+test if it's works and hosted from root context path:
 
 ```bash
 curl 0:8080/
