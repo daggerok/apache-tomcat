@@ -1,11 +1,11 @@
 ##### USAGE BEGIN #####
 #
 # # apply base image:
-# FROM daggerok/apache-tomcat:8.5.57
+# FROM daggerok/apache-tomcat:9.0.37
 #
 # # healthy check:
-# HEALTHCHECK --interval=2s --retries=22 \
-#  CMD wget -q --spider http://127.0.0.1:8080/health/ || exit 1
+# HEALTHCHECK --start-period=1s --interval=1s --timeout=5s --retries=33 \
+#         CMD wget -q --spider http://127.0.0.1:8080/health/ || exit 1
 #
 # # debug:
 # ARG JPDA_OPTS_ARG="${JAVA_OPTS} -agentlib:jdwp=transport=dt_socket,address=1043,server=y,suspend=n"
@@ -20,8 +20,8 @@
 FROM openjdk:8u212-jdk-alpine3.9
 LABEL MAINTAINER="Maksim Kostromin https://github.com/daggerok/docker"
 
-ARG TOMCAT_RELEASE=8
-ARG TOMCAT_VERSION=8.5.57
+ARG TOMCAT_RELEASE=9
+ARG TOMCAT_VERSION=9.0.37
 ARG TOMCAT_USER_ARG="tomcat"
 ARG TOMCAT_FILE_ARG="apache-tomcat-${TOMCAT_VERSION}"
 ARG TOMCAT_URL_ARG="https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_RELEASE}/v${TOMCAT_VERSION}/bin/${TOMCAT_FILE_ARG}.zip"
@@ -52,8 +52,8 @@ RUN apk --no-cache --update add busybox-suid wget ca-certificates unzip sudo ope
 USER ${TOMCAT_USER}
 WORKDIR ${TOMCAT_USER_HOME}
 
-RUN wget     ${TOMCAT_URL} -O "${TOMCAT_USER_HOME}/${TOMCAT_FILE}.zip"                                                            \
- && unzip   "${TOMCAT_USER_HOME}/${TOMCAT_FILE}.zip" -d ${TOMCAT_USER_HOME}                                                       \
- && rm -rf  "${TOMCAT_USER_HOME}/${TOMCAT_FILE}.zip"                                                                              \
+RUN wget -q  ${TOMCAT_URL} -O "${TOMCAT_USER_HOME}/${TOMCAT_FILE}.zip"                                                            \
+ && unzip -q ${TOMCAT_USER_HOME}/${TOMCAT_FILE}.zip -d ${TOMCAT_USER_HOME}                                                        \
+ && rm -rf   ${TOMCAT_USER_HOME}/${TOMCAT_FILE}.zip                                                                               \
  && mkdir -p ${TOMCAT_HOME}/logs && touch ${TOMCAT_HOME}/logs/catalina.out                                                        \
  && chown -R ${TOMCAT_USER}:${TOMCAT_USER} ${TOMCAT_HOME}/logs

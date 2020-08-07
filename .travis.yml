@@ -4,8 +4,8 @@ services:
 env:
   global:
   - TERM=dumb
-  - TOMCAT_VERSION=8.5.57
-  - TOMCAT_MAJOR_VERSION=8
+  - TOMCAT_VERSION=9.0.37
+  - TOMCAT_MAJOR_VERSION=9
   - DOCKER_USERNAME=daggerok
   - secure: "SEPoXlkoiW3V3kjtvsPlQr8gqMlsW+5NVg+FySHEO34Bljtx0WfOnaNO6wYjZ7J/S5KlGD5zYnyHNHCPazrcQ/d1s4fnJlSpl6ulBICOFP9GXw2kim06znt0TNMpMsAfB3dgH80sHgsEBuZhHZaj5qDNRQTK1cscjqlyq4fkiccPde2a1EF1+zAeqlHG9rQt/he1ttSlyfTDRjKWOmee+R+me41SbGs0IWLt5rhrfXxiBXCPTowPNOsh31BXhw2tYqfAIOYRXEm1OYiwplJEF1OPouqNHkH2Q5fXZ5kNrcwoW2SRSC1M+WqDqsH6STPxSd6EQEWSqyzlSB/a9CQ1jT1hd058DV/NzCEEOpbJy01tCya1+5QmaBFwsam24ayAwMdXXtLlP42ZA5STdLwZziO1FIG0f+pxsEyD97Np+5SojDTFzYFar4W8W0P81ItLxIO3uxuYgrRIU5/COKlJ1ecNOK6+AlyaUUwEABwOtFMiUNVjXebmuw9nW8Kn4IfsItZgDY39MtciV5/eqoMHbKV4dLCSFJ++d3PV/cBd3EmiRSkyjnxoQVYGe3ap7qyx/HjnmrjAhx96zzYw25c3iSDWwjUvvrzi9zwApl7nRjh6IfUkOLLEtYqokqHXDC6y5CesQYtNYMOhXowjjGxftxHVfFju1pIoxlaWMGR9gPQ="
 
@@ -22,26 +22,40 @@ script:
 - docker tag ${DOCKER_USERNAME}/apache-tomcat ${DOCKER_USERNAME}/apache-tomcat:${TOMCAT_MAJOR_VERSION}
 - docker tag ${DOCKER_USERNAME}/apache-tomcat ${DOCKER_USERNAME}/apache-tomcat:${TOMCAT_MAJOR_VERSION}-alpine
 - |
-  if [ "$TRAVIS_PULL_REQUEST" == "false" ] ; then
-    exit 0 ;
+  if [[ "$TRAVIS_PULL_REQUEST" == "false" ]] ; then
+    echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin
+    docker push ${DOCKER_USERNAME}/apache-tomcat
   fi
-- docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
-- docker push ${DOCKER_USERNAME}/apache-tomcat
 
 after_script:
 # plain tomcat
 - export TESTS_DIR=$TRAVIS_BUILD_DIR/tests
 - cd $TESTS_DIR
-- wget https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.zip
-- unzip apache-tomcat-${TOMCAT_VERSION}.zip
+- wget -q https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.zip
+- unzip -q apache-tomcat-${TOMCAT_VERSION}.zip
 - bash apache-tomcat-${TOMCAT_VERSION}/bin/catalina.sh run &
-- ./mvnw
-- cp -Rf target/*.war.original apache-tomcat-${TOMCAT_VERSION}/webapps/my-app.war
-- sleep 15s
+- bash ./mvnw -q
+- rm -rf apache-tomcat-${TOMCAT_VERSION}/webapps/{ROOT*,docs,examples,host-manager,manager}
+- cd $TESTS_DIR && cp -Rf target/*.war.original apache-tomcat-${TOMCAT_VERSION}/webapps/my-app.war
+- while [[ 200 -eq `curl -o /dev/null --silent --head --write-out "%{http_code} $LINE\n" 0:8080/my-app/` ]] ; do
+    sleep 1s ;
+  done
 - curl -v 0:8080/my-app/
 - bash apache-tomcat-${TOMCAT_VERSION}/bin/catalina.sh stop
+- sleep 3s
+- stop_any 8080 80
 # docker tomcat
-- echo TODO docker tomcat...
+- curl -sS https://codeload.github.com/daggerok/tomcat-examples/zip/master >/tmp/tomcat-examples.zip
+- unzip -q -d /tmp/tomcat-examples /tmp/tomcat-examples.zip
+- cd /tmp/tomcat-examples/tomcat-examples-master/ && chmod +x ./mvnw
+- cd /tmp/tomcat-examples/tomcat-examples-master/ && ./mvnw clean ; ./mvnw -q
+- docker rmi -f daggerok/02-simple-app-in-docker daggerok/apache-tomcat daggerok/apache-tomcat:8.5.57 daggerok/apache-tomcat:8
+- cd /tmp/tomcat-examples/tomcat-examples-master/ && docker build -f ./02-simple-app-in-docker/Dockerfile -t daggerok/02-simple-app-in-docker ./01-simple-app
+- docker run --name 02-simple-app-in-docker --rm -d -p 8080:8080 daggerok/02-simple-app-in-docker
+- docker logs -f -t 02-simple-app-in-docker &
+- wait_healthy_docker_containers 1
+- curl -v 0:8080/
+- docker stop 02-simple-app-in-docker
 
 os: linux
 arch: amd64
@@ -56,6 +70,7 @@ addons:
   apt:
     update: false
     packages:
+    - wget
     - bash
     - curl
     - tree
