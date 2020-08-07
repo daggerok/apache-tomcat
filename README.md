@@ -4,6 +4,7 @@ Apache Tomcat docker image automation build
 ## Tags
 
 - [latest](https://github.com/daggerok/apache-tomcat/blob/master/Dockerfile) (based on [openjdk:8u212-jdk-alpine3.9](https://hub.docker.com/_/openjdk/) image)
+- [10.0.0-M7](https://github.com/daggerok/apache-tomcat/blob/10.0.0-M7/Dockerfile) (based on [openjdk:8u212-jdk-alpine3.9](https://hub.docker.com/_/openjdk/) image)
 - [9.0.37](https://github.com/daggerok/apache-tomcat/blob/9.0.37/Dockerfile) (based on [openjdk:8u212-jdk-alpine3.9](https://hub.docker.com/_/openjdk/) image)
 - [9.0.6](https://github.com/daggerok/apache-tomcat/blob/9.0.6/Dockerfile) (based on [openjdk:8u151-jdk-alpine](https://hub.docker.com/_/openjdk/) image with JCE installed)
 - [9.0.2](https://github.com/daggerok/apache-tomcat/blob/9.0.2/Dockerfile) (based on [openjdk:8u151-jdk-alpine](https://hub.docker.com/_/openjdk/) image with JCE installed)
@@ -52,7 +53,7 @@ Assuming you have `/health` in your `app`:
 
 ```
 
-FROM daggerok/apache-tomcat:9.0.37
+FROM daggerok/apache-tomcat:10.0.0-M7
 HEALTHCHECK --start-period=1s                                             \
             --interval=1s                                                 \
             --timeout=5s                                                  \
@@ -67,7 +68,7 @@ COPY --chwon=tomcat ./build/libs/*.war ${TOMCAT_HOME}/webapps/app.war
 
 ```
 
-FROM daggerok/apache-tomcat:9-alpine
+FROM daggerok/apache-tomcat:10-alpine
 ARG JPDA_OPTS_ARG="${JAVA_OPTS} -agentlib:jdwp=transport=dt_socket,address=1043,server=y,suspend=n"
 ENV JPDA_OPTS="${JPDA_OPTS_ARG}"
 EXPOSE 5005

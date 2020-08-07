@@ -1,7 +1,7 @@
 ##### USAGE BEGIN #####
 #
 # # apply base image:
-# FROM daggerok/apache-tomcat:9.0.37
+# FROM daggerok/apache-tomcat:10
 #
 # # healthy check:
 # HEALTHCHECK --start-period=1s --interval=1s --timeout=5s --retries=33 \
@@ -20,8 +20,8 @@
 FROM openjdk:8u212-jdk-alpine3.9
 LABEL MAINTAINER="Maksim Kostromin https://github.com/daggerok/docker"
 
-ARG TOMCAT_RELEASE=9
-ARG TOMCAT_VERSION=9.0.37
+ARG TOMCAT_RELEASE=10
+ARG TOMCAT_VERSION=10.0.0-M7
 ARG TOMCAT_USER_ARG="tomcat"
 ARG TOMCAT_FILE_ARG="apache-tomcat-${TOMCAT_VERSION}"
 ARG TOMCAT_URL_ARG="https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_RELEASE}/v${TOMCAT_VERSION}/bin/${TOMCAT_FILE_ARG}.zip"
