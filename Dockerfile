@@ -36,9 +36,8 @@ ENV TOMCAT_HOME="${TOMCAT_USER_HOME}/${TOMCAT_FILE}"
 
 EXPOSE 8080
 ENTRYPOINT ["/bin/ash", "-c"]
-CMD ["                                        \
-  ash ${TOMCAT_HOME}/bin/catalina.sh start && \
-  tail -f ${TOMCAT_HOME}/logs/catalina.out    \
+CMD ["                                    \
+  ash ${TOMCAT_HOME}/bin/catalina.sh run  \
 "]
 
 RUN apk --no-cache --update add busybox-suid wget ca-certificates unzip sudo openssh-client shadow                                \

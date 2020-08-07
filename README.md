@@ -3,10 +3,10 @@ Apache Tomcat docker image automation build
 
 ## Tags
 
-- [latest](https://github.com/daggerok/apache-tomcat/blob/master/Dockerfile) (based on [openjdk:8u151-jdk-alpine](https://hub.docker.com/_/openjdk/) image)
+- [latest](https://github.com/daggerok/apache-tomcat/blob/master/Dockerfile) (based on [openjdk:8u212-jdk-alpine3.9](https://hub.docker.com/_/openjdk/) image)
 - [9.0.6](https://github.com/daggerok/apache-tomcat/blob/9.0.6/Dockerfile) (based on [openjdk:8u151-jdk-alpine](https://hub.docker.com/_/openjdk/) image with JCE installed)
 - [9.0.2](https://github.com/daggerok/apache-tomcat/blob/9.0.2/Dockerfile) (based on [openjdk:8u151-jdk-alpine](https://hub.docker.com/_/openjdk/) image with JCE installed)
-- [8.5.57](https://github.com/daggerok/apache-tomcat/blob/8.5.57/Dockerfile) (based on [openjdk:8u151-jdk-alpine](https://hub.docker.com/_/openjdk/) image with)
+- [8.5.57](https://github.com/daggerok/apache-tomcat/blob/8.5.57/Dockerfile) (based on [openjdk:8u212-jdk-alpine3.9](https://hub.docker.com/_/openjdk/) image with)
 - [8.5.29](https://github.com/daggerok/apache-tomcat/blob/8.5.29/Dockerfile) (based on [openjdk:8u151-jdk-alpine](https://hub.docker.com/_/openjdk/) image with JCE installed)
 - [8.5.24](https://github.com/daggerok/apache-tomcat/blob/8.5.24/Dockerfile) (based on [openjdk:8u151-jdk-alpine](https://hub.docker.com/_/openjdk/) image with JCE installed)
 

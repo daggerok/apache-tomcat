@@ -4,6 +4,8 @@ services:
 env:
   global:
   - TERM=dumb
+  - TOMCAT_VERSION=8.5.57
+  - TOMCAT_MAJOR_VERSION=8
   - DOCKER_USERNAME=daggerok
   - secure: "SEPoXlkoiW3V3kjtvsPlQr8gqMlsW+5NVg+FySHEO34Bljtx0WfOnaNO6wYjZ7J/S5KlGD5zYnyHNHCPazrcQ/d1s4fnJlSpl6ulBICOFP9GXw2kim06znt0TNMpMsAfB3dgH80sHgsEBuZhHZaj5qDNRQTK1cscjqlyq4fkiccPde2a1EF1+zAeqlHG9rQt/he1ttSlyfTDRjKWOmee+R+me41SbGs0IWLt5rhrfXxiBXCPTowPNOsh31BXhw2tYqfAIOYRXEm1OYiwplJEF1OPouqNHkH2Q5fXZ5kNrcwoW2SRSC1M+WqDqsH6STPxSd6EQEWSqyzlSB/a9CQ1jT1hd058DV/NzCEEOpbJy01tCya1+5QmaBFwsam24ayAwMdXXtLlP42ZA5STdLwZziO1FIG0f+pxsEyD97Np+5SojDTFzYFar4W8W0P81ItLxIO3uxuYgrRIU5/COKlJ1ecNOK6+AlyaUUwEABwOtFMiUNVjXebmuw9nW8Kn4IfsItZgDY39MtciV5/eqoMHbKV4dLCSFJ++d3PV/cBd3EmiRSkyjnxoQVYGe3ap7qyx/HjnmrjAhx96zzYw25c3iSDWwjUvvrzi9zwApl7nRjh6IfUkOLLEtYqokqHXDC6y5CesQYtNYMOhXowjjGxftxHVfFju1pIoxlaWMGR9gPQ="
 
@@ -17,6 +19,12 @@ script:
     docker tag ${DOCKER_USERNAME}/apache-tomcat ${DOCKER_USERNAME}/apache-tomcat:${TRAVIS_BRANCH}
     docker tag ${DOCKER_USERNAME}/apache-tomcat ${DOCKER_USERNAME}/apache-tomcat:${TRAVIS_BRANCH}-alpine
   fi
+- docker tag ${DOCKER_USERNAME}/apache-tomcat ${DOCKER_USERNAME}/apache-tomcat:${TOMCAT_MAJOR_VERSION}
+- docker tag ${DOCKER_USERNAME}/apache-tomcat ${DOCKER_USERNAME}/apache-tomcat:${TOMCAT_MAJOR_VERSION}-alpine
+- |
+  if [ "$TRAVIS_PULL_REQUEST" == "false" ] ; then
+    exit 0 ;
+  fi
 - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
 - docker push ${DOCKER_USERNAME}/apache-tomcat
 
@@ -24,14 +32,14 @@ after_script:
 # plain tomcat
 - export TESTS_DIR=$TRAVIS_BUILD_DIR/tests
 - cd $TESTS_DIR
-- wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.57/bin/apache-tomcat-8.5.57.zip
-- unzip apache-tomcat-8.5.57.zip
-- bash apache-tomcat-8.5.57/bin/catalina.sh run &
+- wget https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.zip
+- unzip apache-tomcat-${TOMCAT_VERSION}.zip
+- bash apache-tomcat-${TOMCAT_VERSION}/bin/catalina.sh run &
 - ./mvnw
-- cp -Rf target/*.war.original apache-tomcat-8.5.57/webapps/my-app.war
+- cp -Rf target/*.war.original apache-tomcat-${TOMCAT_VERSION}/webapps/my-app.war
 - sleep 15s
-- curl 0:8080/my-app/
-- bash apache-tomcat-8.5.57/bin/catalina.sh stop
+- curl -v 0:8080/my-app/
+- bash apache-tomcat-${TOMCAT_VERSION}/bin/catalina.sh stop
 # docker tomcat
 - echo TODO docker tomcat...
 
